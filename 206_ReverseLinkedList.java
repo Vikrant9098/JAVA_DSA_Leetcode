@@ -8,6 +8,7 @@
  *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
+
 class Solution {
     public ListNode reverseList(ListNode head) {
         // Base case: if head is null or only one node, it's the new head
