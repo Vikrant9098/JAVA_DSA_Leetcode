@@ -1,3 +1,5 @@
+import java.util.List;
+
 class Solution { 
     // Defines the Solution class (required by LeetCode / judge)
 
