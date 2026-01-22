@@ -3,7 +3,7 @@ import java.util.List;
 class Solution { 
     // Defines the Solution class (required by the platform)
 
-    public int[] minBitwiseArray(List<Integer> nums) {
+    public int[] minBitwiseArray(List<Integer> nums) {3507. Minimum Pair Removal to Sort Array I
         // Function that takes a list of integers and returns an int array
 
         int ans[] = new int[nums.size()];
