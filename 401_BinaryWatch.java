@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 class Solution {
     public List<String> readBinaryWatch(int k){
         // If no LEDs are on, only possible time is 0:00
