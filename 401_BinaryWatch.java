@@ -1,5 +1,5 @@
 class Solution {
-    public List<String> readBinaryWatch(int k) {
+    public List<String> readBinaryWatch(int k){
         // If no LEDs are on, only possible time is 0:00
         if (k == 0) return List.of("0:00");
 
