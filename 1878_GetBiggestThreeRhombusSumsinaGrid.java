@@ -1,57 +1,82 @@
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 class Solution {
     public int[] getBiggestThree(int[][] grid) {
-        int m = grid.length;        // number of rows
-        int n = grid[0].length;     // number of columns
 
-        TreeSet<Integer> set = new TreeSet<>(); // stores unique rhombus sums in sorted order
+        int m = grid.length;          // number of rows
+        int n = grid[0].length;       // number of columns
 
-        for(int i=0;i<m;i++){
-            for(int j=0;j<n;j++){
+        // TreeSet with descending order to keep largest sums first
+        TreeSet<Integer> ts = new TreeSet<>((a,b) -> Integer.compare(b,a));
 
-                set.add(grid[i][j]); // single cell is also a rhombus of size 0
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
 
-                for(int k=1;;k++){   // k represents the rhombus radius (distance from center to corner)
+                ts.add(grid[i][j]);   // single cell rhombus (size 0)
 
-                    // stop if rhombus goes outside grid
-                    if(i-k<0 || i+k>=m || j-k<0 || j+k>=n) break;
+                // try all possible rhombus sizes
+                for(int size = 1; size <= Math.min(m,n); size++){
 
                     int sum = 0;
+                    boolean valid = true;  // check if rhombus stays inside grid
 
-                    // traverse top -> right edge
-                    int r=i-k, c=j;
-                    for(int t=0;t<k;t++) 
-                        sum += grid[r+t][c+t];
+                    int x1 = i, y1 = j;    // first pointer
+                    int x2 = i, y2 = j;    // second pointer (for opposite side)
 
-                    // traverse right -> bottom edge
-                    r=i; c=j+k;
-                    for(int t=0;t<k;t++) 
-                        sum += grid[r+t][c-t];
+                    int dir1 = -1, dir2 = 1; // movement directions for columns
+                    int temp = 0;            // step counter along rhombus edges
 
-                    // traverse bottom -> left edge
-                    r=i+k; c=j;
-                    for(int t=0;t<k;t++) 
-                        sum += grid[r-t][c-t];
+                    // traverse rhombus border
+                    while(temp <= 2 * size){
 
-                    // traverse left -> top edge
-                    r=i; c=j-k;
-                    for(int t=0;t<k;t++) 
-                        sum += grid[r-t][c+t];
+                        // check boundaries
+                        if(Math.min(x1,x2) < 0 || Math.max(x1,x2) >= m ||
+                           Math.min(y1,y2) < 0 || Math.max(y1,y2) >= n){
+                            valid = false;
+                            break;
+                        }
 
-                    set.add(sum); // store rhombus border sum
+                        // avoid double counting if both pointers meet
+                        if(x1 == x2 && y1 == y2){
+                            sum += grid[x1][y1];
+                        }else{
+                            sum += grid[x1][y1];
+                            sum += grid[x2][y2];
+                        }
+
+                        // change direction when reaching middle of rhombus
+                        if(temp == size){
+                            dir2 = dir2 * dir1;
+                            dir1 = dir2 * dir1;
+                        }
+
+                        // move pointers upward diagonally
+                        x1--;
+                        x2--;
+                        y1 = y1 + dir1;
+                        y2 = y2 + dir2;
+
+                        temp++;
+                    }
+
+                    // if rhombus was valid, store its sum
+                    if(valid){
+                        ts.add(sum);
+                    }
                 }
             }
         }
 
-        int size = Math.min(3, set.size()); // we only need top 3 sums
-        int[] ans = new int[size];
+        List<Integer> lst = new ArrayList<>();
 
-        // get largest sums from TreeSet
-        for(int i=size-1;i>=0;i--){
-            ans[i] = set.pollLast(); // remove and return largest element
+        // take top 3 largest sums
+        while(!ts.isEmpty() && lst.size() < 3){
+            lst.add(ts.getFirst());  // largest element
+            ts.removeFirst();        // remove it
         }
 
-        return ans;
+        // convert list to int array
+        return lst.stream().mapToInt(Integer::intValue).toArray();
     }
 }
