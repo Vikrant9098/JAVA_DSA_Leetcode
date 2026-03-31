@@ -11,8 +11,8 @@ class Solution {
         long mod = 1000000007L;
 
         // h1 and h2 store hash values:
-        // index 0 → even indices product
-        // index 1 → odd indices product
+        // index 0 : even indices product
+        // index 1 : odd indices product
         long[] h1 = {1, 1};
         long[] h2 = {1, 1};
 
